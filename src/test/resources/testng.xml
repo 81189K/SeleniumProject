@@ -1,1 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<suite name="SeleniumProjectSuite">
+	<test name="SeleniumProjectTest">
+		<classes>
+			<class name="com.seleniumproject.test.DummyClass">
+			</class>
+		</classes>
+	</test>
+</suite>
