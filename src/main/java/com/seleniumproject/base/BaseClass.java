@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.LockSupport;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -38,6 +40,7 @@ public class BaseClass {
 		System.out.println("Setting up WebDriver for: "+ this.getClass().getName());
 		launchBrowser();
 		configureBrowser();
+		staticWait(2);
 	}
 	
 	/***
@@ -88,5 +91,13 @@ public class BaseClass {
 				System.out.println("Failed to quit the driver: " + e.getMessage());
 			}
 		}
+	}
+	
+	/***
+	 * Static wait for pause
+	 * @param seconds
+	 */
+	public void staticWait(int seconds) {
+		LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(seconds));
 	}
 }
