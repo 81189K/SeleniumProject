@@ -19,7 +19,7 @@ public class BaseClass {
 
 	// protected because: used within same package and child classes
 	protected static Properties prop; 
-	protected static WebDriver driver;	
+	private static WebDriver driver;	
 	//static not needed for driver because teardown and setup>launchBrowser methods has @before and after method annotations.
 	//nothing wrong; no harm in marking driver as static. For future use.
 	
@@ -105,4 +105,20 @@ public class BaseClass {
 	public void staticWait(int seconds) {
 		LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(seconds));
 	}
+	
+	/***
+	 * driver WebDriver getter method. Marked driver as private from protected.
+	 * To access it from different package.
+	 */
+	public WebDriver getDriver() {
+		return driver;
+	}
+	
+	/***
+	 * Driver setter method
+	 */
+	public void setDriver(WebDriver driver) {
+		BaseClass.driver = driver;
+	}
+	
 }

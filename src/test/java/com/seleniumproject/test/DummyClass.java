@@ -8,7 +8,8 @@ public class DummyClass extends BaseClass{
 	
 	@Test
 	public void dummyTest() {
-		String title = driver.getTitle();
+//		String title = driver.getTitle();
+		String title = getDriver().getTitle();
 		/***
 		 * assert keyword: is Java’s built-in assertion mechanism.
 		 * It’s used to check if a condition is true during runtime.
