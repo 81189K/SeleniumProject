@@ -17,14 +17,18 @@ import org.testng.annotations.BeforeSuite;
 
 public class BaseClass {
 
-	protected Properties prop; // used within same package and child classes
-	protected WebDriver driver;
+	// protected because: used within same package and child classes
+	protected static Properties prop; 
+	protected WebDriver driver;	
+	//static not needed for driver because teardown and setup>launchBrowser methods has @before and after method annotations.
 	
 	/***
 	 * load the configuration file
 	 * @throws IOException
 	 */
-	@BeforeSuite
+	@BeforeSuite	// meaning this will run only once; i.e., prop will be initialized only once. 
+	//other tests, starting from 2nd inside classes tag, will fail because they don't have prop value initialized.
+	//FIX: since, suite level, make it static, so that all classes will have its value.
 	public void loadConfig() throws IOException {
 		prop = new Properties();
 		//read the file - make object of FileInputStream class
