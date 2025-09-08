@@ -22,6 +22,7 @@ public class BaseClass {
 	private static WebDriver driver;	
 	//static not needed for driver because teardown and setup>launchBrowser methods has @before and after method annotations.
 	//nothing wrong; no harm in marking driver as static. For future use.
+	//Marked driver as private from protected. And added getter and setter methods for it.
 	
 	/***
 	 * load the configuration file

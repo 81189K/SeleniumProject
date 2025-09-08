@@ -1,5 +1,151 @@
 package com.seleniumproject.actiondriver;
 
-public class ActionDriver {
+import java.time.Duration;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+public class ActionDriver {
+	
+	private WebDriver driver;
+	private WebDriverWait wait;
+	
+	public ActionDriver(WebDriver driver) {
+		this.driver = driver;
+		this.wait = new WebDriverWait(driver, Duration.ofSeconds(30)); //TODO: 30 from config.properties
+	}
+	
+	/***
+	 * Method to click an element.
+	 */
+	public void click(By by) {
+		try {
+			waitForElementToBeClickable(by); 
+			//note: if an element is clickable, it’s definitely visible. But the reverse isn’t true — a visible element might still be disabled or blocked
+			driver.findElement(by).click(); //TODO: scrollIntoView before click.
+			//TODO: log message after action.
+		} catch (Exception e) {
+			System.out.println("Unable to click element: "+ e.getMessage());
+		}
+	}
+	
+	/***
+	 * Method to enter text into an input element.
+	 */
+	public void enterText(By by, String value) {
+		try {
+			waitForElementToBeVisible(by);
+			driver.findElement(by).clear();
+			driver.findElement(by).sendKeys(value); //TODO: scroll +  click + clear + set + wait
+			//TODO: log message after action.
+		} catch (Exception e) {
+			System.out.println("Unable to enter the value in input element: "+ e.getMessage());
+		}
+	}
+	
+	/***
+	 * Method to get text from an input element.
+	 */
+	public String getText(By by, String value) {
+		String fetchedData = "";
+		try {
+			waitForElementToBeVisible(by);
+			fetchedData = driver.findElement(by).getText(); //TODO: scroll
+			//TODO: log message after action.
+		} catch (Exception e) {
+			System.out.println("Unable to get the text from input element: "+ e.getMessage());
+		}
+		return fetchedData;
+	}
+	
+	/***
+	 * Method to compare two text
+	 */
+	public void compareText(By by, String expectedText) {
+		try {
+			waitForElementToBeVisible(by);
+			String actualText = driver.findElement(by).getText(); //TODO: scroll
+			if(expectedText.equals(actualText)) {
+				System.out.println("Text are matching: "+ actualText + " equals "+ expectedText );
+			}else {
+				System.out.println("Text are not matching: "+ actualText + " not equals "+ expectedText );
+			}
+		} catch (Exception e) {
+			System.out.println("Unable to compare texts: "+ e.getMessage());
+		}
+	
+	}
+	
+	/***
+	 * Method to compare two text
+	 */
+	public boolean isDisplayed(By by) {
+		try {
+			waitForElementToBeVisible(by);
+			boolean isDisplayed = driver.findElement(by).isDisplayed();
+			if(isDisplayed) {
+				System.out.println("Element is visible");
+				return isDisplayed;
+			}else {
+				return isDisplayed;
+			}	
+		} catch (Exception e) {
+			System.out.println("Element is not displayed: "+ e.getMessage());
+			return false;
+		}
+	}
+	
+	/***
+	 * scroll to an element
+	 */
+	public void scrollToElement(By by) {
+		try {
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+			WebElement element = driver.findElement(by);
+			js.executeScript("arguments[0].scrollIntoView(true);", element);
+		} catch (Exception e) {
+			System.out.println("Unable to locate element:" + e.getMessage());
+		}
+	}
+	
+	/***
+	 * Wait for page to load
+	 */
+	public void waitForPageLoad(int timeOutInSeconds) {
+		try {
+			wait.withTimeout(Duration.ofSeconds(timeOutInSeconds))
+				.until(WebDriver -> ((JavascriptExecutor) WebDriver).executeScript("return document.readyState").equals("complete"));
+			System.out.println("Page loaded successfully.");
+		} catch (Exception e) {
+			System.out.println("Page did not load within " + timeOutInSeconds + " seconds. Exception: " + e.getMessage());
+		}
+	}
+	
+	/***
+	 * Wait for element to be clickable
+	 * @param by
+	 */
+	private void waitForElementToBeClickable(By by) {
+		try {
+			wait.until(ExpectedConditions.elementToBeClickable(by));
+		} catch (Exception e) {
+			System.out.println("Element is not clickable: "+e.getMessage());
+		}
+	}
+	
+	/***
+	 * Wait for element to be visible
+	 * @param by
+	 */
+	private void waitForElementToBeVisible(By by) {
+		try {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+		} catch (Exception e) {
+			System.out.println("Element is not visible: "+e.getMessage());
+		}
+	}
 }
