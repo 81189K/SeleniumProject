@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "testng.dtd">
 <suite name="SeleniumProjectSuite">
 	<test name="SeleniumProjectTest">
+		<classes>
+			<class name="com.seleniumproject.test.DummyClass"/>
+			<class name="com.seleniumproject.test.DummyClass2"/>
+		</classes>
+	</test>
+	<test name="SeleniumProjectTest1">
 		<classes>
 			<class name="com.seleniumproject.test.DummyClass"/>
 			<class name="com.seleniumproject.test.DummyClass2"/>

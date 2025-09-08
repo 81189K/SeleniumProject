@@ -19,8 +19,9 @@ public class BaseClass {
 
 	// protected because: used within same package and child classes
 	protected static Properties prop; 
-	protected WebDriver driver;	
+	protected static WebDriver driver;	
 	//static not needed for driver because teardown and setup>launchBrowser methods has @before and after method annotations.
+	//nothing wrong; no harm in marking driver as static. For future use.
 	
 	/***
 	 * load the configuration file
