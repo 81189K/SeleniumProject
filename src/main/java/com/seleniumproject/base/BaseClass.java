@@ -23,12 +23,15 @@ public class BaseClass {
 
 	// protected because: used within same package and child classes
 	private static Properties prop; //protected to private. Since, writing getter method.
-	private static WebDriver driver;	
-	//static not needed for driver because teardown and setup>launchBrowser methods has @before and after method annotations.
-	//nothing wrong; no harm in marking driver as static. For future use.
-	//Marked driver as private from protected. And added getter and setter methods for it.
+//	private static WebDriver driver;	
+//	//static not needed for driver because teardown and setup>launchBrowser methods has @before and after method annotations.
+//	//nothing wrong; no harm in marking driver as static. For future use.
+//	//Marked driver as private from protected. And added getter and setter methods for it.
 	
-	private static ActionDriver actionDriver;
+	private static ThreadLocal<WebDriver> driver =new ThreadLocal<>();
+	private static ThreadLocal<ActionDriver> actionDriver =new ThreadLocal<>();
+//	private static ActionDriver actionDriver;
+	
 	public static final Logger logger = LoggerManager.getLogger(BaseClass.class);
 	
 	/***
@@ -49,7 +52,7 @@ public class BaseClass {
 	}
 	
 	@BeforeMethod
-	public void setup() throws IOException {
+	public synchronized void setup() throws IOException {
 		//here, lets call the private methods
 		System.out.println("Setting up WebDriver for: "+ this.getClass().getName());
 		launchBrowser();
@@ -64,11 +67,14 @@ public class BaseClass {
 //		logger.error("This is a error message");
 //		logger.fatal("This is a fatal message");
 		
-		//Initialize actionDriver object only once
-		if(actionDriver == null) {
-			actionDriver = new ActionDriver(driver, prop);
-			logger.info("ActionDriver Initialized");
-		}
+//		//Initialize actionDriver object only once
+//		if(actionDriver == null) {
+//			actionDriver = new ActionDriver(driver, prop);
+//			logger.info("ActionDriver instance is created using thread: " + Thread.currentThread().getName());
+//		}
+		//Initialize actionDriver for the current thread
+		actionDriver.set(new ActionDriver(getDriver(), prop));
+		logger.info("ActionDriver initialized from thread: " + Thread.currentThread().getName());
 	}
 	
 	/***
@@ -78,13 +84,16 @@ public class BaseClass {
 		String browser = prop.getProperty("browser");
 		
 		if(browser.equalsIgnoreCase("chrome")) {			//use switch or if block.
-			driver = new ChromeDriver();
+//			driver = new ChromeDriver();
+			driver.set(new ChromeDriver());		//New change as per Thread
 			logger.info("ChromeDriver Instance is created");
 		} else if(browser.equalsIgnoreCase("firefox")) {
-			driver = new FirefoxDriver();
+//			driver = new FirefoxDriver();
+			driver.set(new FirefoxDriver());		//New change as per Thread
 			logger.info("FirefoxDriver Instance is created");
 		} else if(browser.equalsIgnoreCase("edge")) {
-			driver = new EdgeDriver();
+//			driver = new EdgeDriver();
+			driver.set(new EdgeDriver());		//New change as per Thread
 			logger.info("EdgeDriver Instance is created");
 		} else {
 			throw new IllegalArgumentException("Browser not supported: "+ browser); //throw exception or make one browser as default.
@@ -100,30 +109,32 @@ public class BaseClass {
 	private void configureBrowser() {
 		//Implicit Wait
 		int implicitWait = Integer.parseInt(prop.getProperty("implicitWait"));
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWait));
+		getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWait));
 		
 		//Maximize the driver
-		driver.manage().window().maximize();
+		getDriver().manage().window().maximize();
 		
 		//Navigate to URL
 		try {
-			driver.get(prop.getProperty("url"));
+			getDriver().get(prop.getProperty("url"));
 		} catch (Exception e) {
 			System.out.println("Failed to navigate to the URL: " + e.getMessage());
 		}
 	}
 	
 	@AfterMethod
-	public void teardown() {
-		if(driver != null) {
+	public synchronized void teardown() {
+		if(getDriver() != null) {
 			try {
-				driver.quit();
+				getDriver().quit();
 			} catch (Exception e) {
 				System.out.println("Failed to quit the driver: " + e.getMessage());
 			}
 		}
-		driver = null;
-		actionDriver = null;
+//		driver = null;
+//		actionDriver = null;
+		driver.remove();			//New change as per Thread
+		actionDriver.remove();
 		logger.info("WebDriver instance is closed");
 	}
 	
@@ -153,19 +164,19 @@ public class BaseClass {
 	
 	//getter method for WebDriver
 	public static WebDriver getDriver() {
-		if(driver  == null) {
+		if(driver.get()  == null) {
 			System.out.println("WebDriver is not initialized");
 			throw new IllegalStateException("WebDriver is not initialized");
 		}
-		return driver;
+		return driver.get();
 	}
 	//getter method for ActionDriver
 	public static ActionDriver getActionDriver() {
-		if(actionDriver  == null) {
+		if(actionDriver.get()  == null) {
 			System.out.println("ActionDriver is not initialized");
 			throw new IllegalStateException("ActionDriver is not initialized");
 		}
-		return actionDriver;
+		return actionDriver.get();
 	}
 	
 	/***

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "testng.dtd">
-<suite name="SeleniumProjectSuite">
+<!-- <suite name="SeleniumProjectSuite" parallel="tests" thread-count="3"> -->
+<!-- <suite name="SeleniumProjectSuite" parallel="methods" thread-count="3"> -->
+<suite name="SeleniumProjectSuite" parallel="classes" thread-count="3">
 	<test name="SeleniumProjectTest">
 		<classes>
 			<class name="com.seleniumproject.test.DummyClass"/>
-			<class name="com.seleniumproject.test.DummyClass2"/>
+			<!-- <class name="com.seleniumproject.test.DummyClass2"/> -->
 			<class name="com.seleniumproject.test.LoginPageTest"/>
 		</classes>
 	</test>
