@@ -37,9 +37,12 @@ public class LoginPage {
 	private By errorMsg = By.xpath("//div[contains(@class,'oxd-alert-content--error')]/p");
 	
 	
-	//constructor: to initialize ActionDriver object
+//	//constructor: to initialize ActionDriver object
+//	public LoginPage(WebDriver driver) {
+//		this.actionDriver = new ActionDriver(driver, BaseClass.getProp());
+//	}
 	public LoginPage(WebDriver driver) {
-		this.actionDriver = new ActionDriver(driver, BaseClass.getProp());
+		this.actionDriver = BaseClass.getActionDriver();
 	}
 	
 	

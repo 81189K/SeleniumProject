@@ -18,9 +18,12 @@ public class HomePage {
 	private By logo = By.cssSelector(".oxd-brand-banner img");
 	
 
-	//constructor: to initialize ActionDriver object
+//	//constructor: to initialize ActionDriver object
+//	public HomePage(WebDriver driver) {
+//		this.actionDriver = new ActionDriver(driver, BaseClass.getProp());
+//	}
 	public HomePage(WebDriver driver) {
-		this.actionDriver = new ActionDriver(driver, BaseClass.getProp());
+		this.actionDriver = BaseClass.getActionDriver();
 	}
 	
 	
