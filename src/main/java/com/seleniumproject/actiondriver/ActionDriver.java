@@ -70,20 +70,23 @@ public class ActionDriver {
 	
 	/***
 	 * Method to compare two text
+	 * @modify: changed return type
 	 */
-	public void compareText(By by, String expectedText) {
+	public boolean compareText(By by, String expectedText) {
 		try {
 			waitForElementToBeVisible(by);
 			String actualText = driver.findElement(by).getText(); //TODO: scroll
 			if(expectedText.equals(actualText)) {
 				System.out.println("Text are matching: "+ actualText + " equals "+ expectedText );
+				return true;
 			}else {
 				System.out.println("Text are not matching: "+ actualText + " not equals "+ expectedText );
+				return false;
 			}
 		} catch (Exception e) {
 			System.out.println("Unable to compare texts: "+ e.getMessage());
 		}
-	
+		return false;
 	}
 	
 	/***

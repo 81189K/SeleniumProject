@@ -70,7 +70,7 @@ public class LoginPage {
 	/***
 	 * Validate error message text is displayed correct or not
 	 */
-	public void verifyErrorMessage(String expectedErrorMsg) {
-		actionDriver.compareText(errorMsg, expectedErrorMsg);
+	public boolean verifyErrorMessage(String expectedErrorMsg) {
+		return actionDriver.compareText(errorMsg, expectedErrorMsg);
 	}
 }
