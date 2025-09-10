@@ -1,6 +1,7 @@
 package com.seleniumproject.actiondriver;
 
 import java.time.Duration;
+import java.util.Properties;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -14,9 +15,10 @@ public class ActionDriver {
 	private WebDriver driver;
 	private WebDriverWait wait;
 	
-	public ActionDriver(WebDriver driver) {
+	public ActionDriver(WebDriver driver, Properties prop) {
 		this.driver = driver;
-		this.wait = new WebDriverWait(driver, Duration.ofSeconds(30)); //TODO: 30 from config.properties
+		int explicitWait = Integer.parseInt(prop.getProperty("explicitWait"));
+		this.wait = new WebDriverWait(driver, Duration.ofSeconds(explicitWait)); //TODO: 30 from config.properties
 	}
 	
 	/***
@@ -35,12 +37,16 @@ public class ActionDriver {
 	
 	/***
 	 * Method to enter text into an input element.
+	 * @modify: avoid code duplication; Fix multiple methods calls
 	 */
 	public void enterText(By by, String value) {
 		try {
 			waitForElementToBeVisible(by);
-			driver.findElement(by).clear();
-			driver.findElement(by).sendKeys(value); //TODO: scroll +  click + clear + set + wait
+//			driver.findElement(by).clear();
+//			driver.findElement(by).sendKeys(value); //TODO: scroll +  click + clear + set + wait
+			WebElement element = driver.findElement(by);
+			element.clear();
+			element.sendKeys(value);
 			//TODO: log message after action.
 		} catch (Exception e) {
 			System.out.println("Unable to enter the value in input element: "+ e.getMessage());
@@ -50,7 +56,7 @@ public class ActionDriver {
 	/***
 	 * Method to get text from an input element.
 	 */
-	public String getText(By by, String value) {
+	public String getText(By by) {
 		String fetchedData = "";
 		try {
 			waitForElementToBeVisible(by);
@@ -81,18 +87,13 @@ public class ActionDriver {
 	}
 	
 	/***
-	 * Method to compare two text
+	 * Method to check if an element is displayed or not
+	 * @modify: just return the boolean value
 	 */
 	public boolean isDisplayed(By by) {
 		try {
 			waitForElementToBeVisible(by);
-			boolean isDisplayed = driver.findElement(by).isDisplayed();
-			if(isDisplayed) {
-				System.out.println("Element is visible");
-				return isDisplayed;
-			}else {
-				return isDisplayed;
-			}	
+			return driver.findElement(by).isDisplayed();
 		} catch (Exception e) {
 			System.out.println("Element is not displayed: "+ e.getMessage());
 			return false;

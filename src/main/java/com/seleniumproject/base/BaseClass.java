@@ -18,7 +18,7 @@ import org.testng.annotations.BeforeSuite;
 public class BaseClass {
 
 	// protected because: used within same package and child classes
-	protected static Properties prop; 
+	private static Properties prop; //protected to private. Since, writing getter method.
 	private static WebDriver driver;	
 	//static not needed for driver because teardown and setup>launchBrowser methods has @before and after method annotations.
 	//nothing wrong; no harm in marking driver as static. For future use.
@@ -120,6 +120,14 @@ public class BaseClass {
 	 */
 	public void setDriver(WebDriver driver) {
 		BaseClass.driver = driver;
+	}
+	
+	/***
+	 * prop Properties getter method.
+	 * To access it (private) from different package.
+	 */
+	public static Properties getProp() {
+		return prop;
 	}
 	
 }
