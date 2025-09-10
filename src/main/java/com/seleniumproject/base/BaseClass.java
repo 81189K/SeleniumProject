@@ -15,6 +15,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 
+import com.seleniumproject.actiondriver.ActionDriver;
+
 public class BaseClass {
 
 	// protected because: used within same package and child classes
@@ -23,6 +25,8 @@ public class BaseClass {
 	//static not needed for driver because teardown and setup>launchBrowser methods has @before and after method annotations.
 	//nothing wrong; no harm in marking driver as static. For future use.
 	//Marked driver as private from protected. And added getter and setter methods for it.
+	
+	private static ActionDriver actionDriver;
 	
 	/***
 	 * load the configuration file
@@ -47,6 +51,12 @@ public class BaseClass {
 		launchBrowser();
 		configureBrowser();
 		staticWait(2);
+		
+		//Initialize actionDriver object only once
+		if(actionDriver == null) {
+			actionDriver = new ActionDriver(driver, prop);
+			System.out.println("ActionDriver instance is created");
+		}
 	}
 	
 	/***
@@ -97,6 +107,9 @@ public class BaseClass {
 				System.out.println("Failed to quit the driver: " + e.getMessage());
 			}
 		}
+		driver = null;
+		actionDriver = null;
+		System.out.println("WebDriver instance is closed");
 	}
 	
 	/***
@@ -107,19 +120,37 @@ public class BaseClass {
 		LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(seconds));
 	}
 	
-	/***
-	 * driver WebDriver getter method. Marked driver as private from protected.
-	 * To access it from different package.
-	 */
-	public WebDriver getDriver() {
+
+//	/***
+//	 * driver WebDriver getter method. Marked driver as private from protected.
+//	 * To access it from different package.
+//	 */
+//	public WebDriver getDriver() {
+//		return driver;
+//	}
+//	
+//	/***
+//	 * Driver setter method
+//	 */
+//	public void setDriver(WebDriver driver) {
+//		BaseClass.driver = driver;
+//	}
+	
+	//getter method for WebDriver
+	public static WebDriver getDriver() {
+		if(driver  == null) {
+			System.out.println("WebDriver is not initialized");
+			throw new IllegalStateException("WebDriver is not initialized");
+		}
 		return driver;
 	}
-	
-	/***
-	 * Driver setter method
-	 */
-	public void setDriver(WebDriver driver) {
-		BaseClass.driver = driver;
+	//getter method for ActionDriver
+	public static ActionDriver getActionDriver() {
+		if(actionDriver  == null) {
+			System.out.println("ActionDriver is not initialized");
+			throw new IllegalStateException("ActionDriver is not initialized");
+		}
+		return actionDriver;
 	}
 	
 	/***
