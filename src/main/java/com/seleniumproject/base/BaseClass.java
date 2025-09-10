@@ -58,11 +58,11 @@ public class BaseClass {
 		logger.info("configurd implict wait and maximized browser window");
 		staticWait(2);
 		
-		logger.warn("This is a warn message");
-		logger.debug("This is a debug message");
-		logger.trace("This is a trace message");
-		logger.error("This is a error message");
-		logger.fatal("This is a fatal message");
+//		logger.warn("This is a warn message");
+//		logger.debug("This is a debug message");
+//		logger.trace("This is a trace message");
+//		logger.error("This is a error message");
+//		logger.fatal("This is a fatal message");
 		
 		//Initialize actionDriver object only once
 		if(actionDriver == null) {

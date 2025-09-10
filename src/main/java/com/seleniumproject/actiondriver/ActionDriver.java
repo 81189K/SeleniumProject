@@ -1,6 +1,8 @@
 package com.seleniumproject.actiondriver;
 
 import java.time.Duration;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.logging.log4j.Logger;
@@ -30,11 +32,12 @@ public class ActionDriver {
 	 * Method to click an element.
 	 */
 	public void click(By by) {
+		String elementDescription = getElementDescription(by);
 		try {
 			waitForElementToBeClickable(by); 
 			//note: if an element is clickable, it’s definitely visible. But the reverse isn’t true — a visible element might still be disabled or blocked
 			driver.findElement(by).click(); //TODO: scrollIntoView before click.
-			logger.info("clicked on element");
+			logger.info("clicked on element--->"+elementDescription);
 		} catch (Exception e) {
 			System.out.println("Unable to click element: "+ e.getMessage());
 		}
@@ -52,7 +55,7 @@ public class ActionDriver {
 			WebElement element = driver.findElement(by);
 			element.clear();
 			element.sendKeys(value);
-			//TODO: log message after action.
+			logger.info("entered text: '"+value+"' on element--->"+getElementDescription(by));
 		} catch (Exception e) {
 			System.out.println("Unable to enter the value in input element: "+ e.getMessage());
 		}
@@ -157,4 +160,58 @@ public class ActionDriver {
 			System.out.println("Element is not visible: "+e.getMessage());
 		}
 	}
+	
+	/***
+	 * get element description using By locator.
+	 */
+	public String getElementDescription(By locator) {
+	    if (driver == null) {
+	        logger.error("Driver is null, cannot find element for locator: {}", locator);
+	        return "Unknown element (driver is null)";
+	    }
+	    if (locator == null) {
+	        logger.error("Locator is null");
+	        return "Unknown element (locator is null)";
+	    }
+
+	    try {
+	        WebElement element = driver.findElement(locator);
+
+	        // candidate attributes in priority order
+	        Map<String, String> attributes = new LinkedHashMap<>();
+	        attributes.put("id", element.getDomAttribute("id"));
+	        attributes.put("name", element.getDomAttribute("name"));
+	        attributes.put("text", element.getText());
+	        attributes.put("class", element.getDomAttribute("class"));
+	        attributes.put("placeholder", element.getDomAttribute("placeholder"));
+
+	        for (Map.Entry<String, String> entry : attributes.entrySet()) {
+	            if (isNotEmpty(entry.getValue())) {
+	                return "Element with " + entry.getKey() + ": " + truncate(entry.getValue(), 30);
+	            }
+	        }
+
+	    } catch (Exception e) {
+	        logger.error("Unable to describe element for locator {}: {}", locator, e.getMessage(), e);
+	    }
+
+	    return "Unknown element";
+	}
+
+
+	/***
+	 * Utility Method: to check String is not null or empty
+	 */
+	private boolean isNotEmpty(String value) {
+		return value != null && !value.isBlank();
+	}
+
+	/***
+	 * Utility Method: to check String is not null or empty
+	 */
+	private String truncate(String value, int maxLength) {
+		return (value == null || value.length() <= maxLength) ? value : value.substring(0, maxLength);
+	}
+
+	
 }
