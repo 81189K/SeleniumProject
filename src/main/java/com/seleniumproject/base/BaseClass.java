@@ -7,6 +7,7 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -16,6 +17,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 
 import com.seleniumproject.actiondriver.ActionDriver;
+import com.seleniumproject.utilities.LoggerManager;
 
 public class BaseClass {
 
@@ -27,6 +29,7 @@ public class BaseClass {
 	//Marked driver as private from protected. And added getter and setter methods for it.
 	
 	private static ActionDriver actionDriver;
+	public static final Logger logger = LoggerManager.getLogger(BaseClass.class);
 	
 	/***
 	 * load the configuration file
@@ -41,6 +44,7 @@ public class BaseClass {
 		FileInputStream fis = new FileInputStream("src/main/resources/config.properties"); //throws FileNotFoundException
 		//load the file
 		prop.load(fis);	//throws IOException
+		logger.info("loaded the config.properrties file");
 		
 	}
 	
@@ -49,13 +53,21 @@ public class BaseClass {
 		//here, lets call the private methods
 		System.out.println("Setting up WebDriver for: "+ this.getClass().getName());
 		launchBrowser();
+		logger.info("WebDriver Initialized");
 		configureBrowser();
+		logger.info("configurd implict wait and maximized browser window");
 		staticWait(2);
+		
+		logger.warn("This is a warn message");
+		logger.debug("This is a debug message");
+		logger.trace("This is a trace message");
+		logger.error("This is a error message");
+		logger.fatal("This is a fatal message");
 		
 		//Initialize actionDriver object only once
 		if(actionDriver == null) {
 			actionDriver = new ActionDriver(driver, prop);
-			System.out.println("ActionDriver instance is created");
+			logger.info("ActionDriver Initialized");
 		}
 	}
 	
@@ -67,10 +79,13 @@ public class BaseClass {
 		
 		if(browser.equalsIgnoreCase("chrome")) {			//use switch or if block.
 			driver = new ChromeDriver();
+			logger.info("ChromeDriver Instance is created");
 		} else if(browser.equalsIgnoreCase("firefox")) {
 			driver = new FirefoxDriver();
+			logger.info("FirefoxDriver Instance is created");
 		} else if(browser.equalsIgnoreCase("edge")) {
 			driver = new EdgeDriver();
+			logger.info("EdgeDriver Instance is created");
 		} else {
 			throw new IllegalArgumentException("Browser not supported: "+ browser); //throw exception or make one browser as default.
 		}	
@@ -109,7 +124,7 @@ public class BaseClass {
 		}
 		driver = null;
 		actionDriver = null;
-		System.out.println("WebDriver instance is closed");
+		logger.info("WebDriver instance is closed");
 	}
 	
 	/***

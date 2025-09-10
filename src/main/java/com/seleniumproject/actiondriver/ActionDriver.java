@@ -3,6 +3,7 @@ package com.seleniumproject.actiondriver;
 import java.time.Duration;
 import java.util.Properties;
 
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -10,15 +11,19 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.seleniumproject.base.BaseClass;
+
 public class ActionDriver {
 	
 	private WebDriver driver;
 	private WebDriverWait wait;
+	public static final Logger logger = BaseClass.logger;
 	
 	public ActionDriver(WebDriver driver, Properties prop) {
 		this.driver = driver;
 		int explicitWait = Integer.parseInt(prop.getProperty("explicitWait"));
 		this.wait = new WebDriverWait(driver, Duration.ofSeconds(explicitWait)); //TODO: 30 from config.properties
+		logger.info("WebDriver instance is created");
 	}
 	
 	/***
@@ -29,7 +34,7 @@ public class ActionDriver {
 			waitForElementToBeClickable(by); 
 			//note: if an element is clickable, it’s definitely visible. But the reverse isn’t true — a visible element might still be disabled or blocked
 			driver.findElement(by).click(); //TODO: scrollIntoView before click.
-			//TODO: log message after action.
+			logger.info("clicked on element");
 		} catch (Exception e) {
 			System.out.println("Unable to click element: "+ e.getMessage());
 		}
