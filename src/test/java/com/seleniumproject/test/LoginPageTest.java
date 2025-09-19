@@ -24,7 +24,7 @@ public class LoginPageTest extends BaseClass{
 		loginPage.login("admin", "admin123");
 		Assert.assertTrue(homePage.isAdminTabVisible(), "Admin tab is NOT visible after login");
 		homePage.logout();
-		staticWait(3);
+		staticWait(1);
 	}
 	
 	@Test

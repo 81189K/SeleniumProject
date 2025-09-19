@@ -21,6 +21,7 @@ logs/
 # drivers/
 # *.exe
 # *.driver
+src/test/resources/*.exe
 
 # Test reports or temporary files
 test-output/

@@ -51,6 +51,7 @@ public class BaseClass {
 		
 	}
 	
+	//synchronized: only one thread can use this method at a time.
 	@BeforeMethod
 	public synchronized void setup() throws IOException {
 		//here, lets call the private methods
@@ -80,7 +81,7 @@ public class BaseClass {
 	/***
 	 * Initialize the WebDriver based on browser defined in config.properties file
 	 */
-	private void launchBrowser() {
+	private synchronized void launchBrowser() {
 		String browser = prop.getProperty("browser");
 		
 		if(browser.equalsIgnoreCase("chrome")) {			//use switch or if block.
