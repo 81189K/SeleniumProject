@@ -17,6 +17,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 
 import com.seleniumproject.actiondriver.ActionDriver;
+import com.seleniumproject.utilities.ExtentReportsManager;
 import com.seleniumproject.utilities.LoggerManager;
 
 public class BaseClass {
@@ -49,6 +50,8 @@ public class BaseClass {
 		prop.load(fis);	//throws IOException
 		logger.info("loaded the config.properrties file");
 		
+		//Start ExtentReports
+		ExtentReportsManager.getReporter();
 	}
 	
 	//synchronized: only one thread can use this method at a time.
@@ -87,14 +90,17 @@ public class BaseClass {
 		if(browser.equalsIgnoreCase("chrome")) {			//use switch or if block.
 //			driver = new ChromeDriver();
 			driver.set(new ChromeDriver());		//New change as per Thread
+			ExtentReportsManager.registerDriver(getDriver());
 			logger.info("ChromeDriver Instance is created");
 		} else if(browser.equalsIgnoreCase("firefox")) {
 //			driver = new FirefoxDriver();
 			driver.set(new FirefoxDriver());		//New change as per Thread
+			ExtentReportsManager.registerDriver(getDriver());
 			logger.info("FirefoxDriver Instance is created");
 		} else if(browser.equalsIgnoreCase("edge")) {
 //			driver = new EdgeDriver();
 			driver.set(new EdgeDriver());		//New change as per Thread
+			ExtentReportsManager.registerDriver(getDriver());
 			logger.info("EdgeDriver Instance is created");
 		} else {
 			throw new IllegalArgumentException("Browser not supported: "+ browser); //throw exception or make one browser as default.
@@ -136,6 +142,7 @@ public class BaseClass {
 //		actionDriver = null;
 		driver.remove();			//New change as per Thread
 		actionDriver.remove();
+		ExtentReportsManager.endTest();
 		logger.info("WebDriver instance is closed");
 	}
 	
