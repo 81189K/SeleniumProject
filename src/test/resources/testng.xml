@@ -2,12 +2,13 @@
 <!DOCTYPE suite SYSTEM "testng.dtd">
 <!-- <suite name="SeleniumProjectSuite" parallel="tests" thread-count="3"> -->
 <!-- <suite name="SeleniumProjectSuite" parallel="methods" thread-count="3"> -->
-<suite name="SeleniumProjectSuite" parallel="methods" thread-count="3">
+<suite name="SeleniumProjectSuite" parallel="classes" thread-count="3">
 	<test name="SeleniumProjectTest">
 		<classes>
 			<class name="com.seleniumproject.test.DummyClass"/>
-			<!-- <class name="com.seleniumproject.test.DummyClass2"/> -->
+			<class name="com.seleniumproject.test.DummyClass2"/>
 			<class name="com.seleniumproject.test.LoginPageTest"/>
+			<class name="com.seleniumproject.test.HomePageTest"/>
 		</classes>
 	</test>
 </suite>

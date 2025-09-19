@@ -38,6 +38,8 @@ public class ExtentReportsManager {
 
 			// initialize
 			extent = new ExtentReports();
+			//link spart with extent
+			extent.attachReporter(spark);
 
 			// Adding system info
 			extent.setSystemInfo("Operating System", System.getProperty("os.name"));
@@ -83,14 +85,16 @@ public class ExtentReportsManager {
 
 	// log a step failure with Screenshot
 	public static void logFailure(WebDriver driver, String logMessage, String screenshotMessage) {
-		getTest().fail(logMessage);
+		String failureMessage = String.format("<span style='color:red;'>%s</span>", logMessage);
+		getTest().fail(failureMessage);
 		// Screenshot method
 		attachScreenshot(driver, screenshotMessage);
 	}
 
 	// log a skip
 	public static void logSkip(WebDriver driver, String logMessage, String screenshotMessage) {
-		getTest().skip(logMessage);
+		String skipMessage = String.format("<span style='color:orange;'>%s</span>", logMessage);
+		getTest().skip(skipMessage);
 	}
 
 	// Take screenshot with data and time in the file

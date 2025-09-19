@@ -23,6 +23,12 @@ logs/
 # *.driver
 src/test/resources/*.exe
 
+# ExtentReports
+src/test/resources/ExtentReport/
+
+# Screenshots
+src/test/resources/screenshots/
+
 # Test reports or temporary files
 test-output/
 surefire-reports/

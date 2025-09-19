@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import com.seleniumproject.base.BaseClass;
 import com.seleniumproject.pages.HomePage;
 import com.seleniumproject.pages.LoginPage;
+import com.seleniumproject.utilities.ExtentReportsManager;
 
 public class HomePageTest extends BaseClass{
 	
@@ -21,8 +22,11 @@ public class HomePageTest extends BaseClass{
 	
 	@Test
 	public void verifyOrangeHRMLogo() {
+		ExtentReportsManager.startTest("Verify Login Test");
+		System.out.println("Running testmethod on thread: " + Thread.currentThread().getName());
 		loginPage.login("admin", "admin123");
 		Assert.assertTrue(homePage.isLogoVisible(), "Test Failed: Logo is not visisble");
+		ExtentReportsManager.logStepWithScreenshot(getDriver(), "Logo is visible in home page", "Logo is visible in home page");
 	}
 
 }
